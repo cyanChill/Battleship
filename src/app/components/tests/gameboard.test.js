@@ -18,7 +18,8 @@ const subShipObj = {
 };
 gameBoard.placeShipAt(subShipObj, { vertical: true, location: { x: 3, y: 5 } });
 
-const shipList = [shipObj, subShipObj];
+gameBoard.addShipInfo(shipObj);
+gameBoard.addShipInfo(subShipObj);
 
 /* Start of tests */
 test("Place a ship onto the board", () => {
@@ -149,7 +150,7 @@ test("Invalid Vertical Placement: Overlap", () => {
 
 test("Missed Attack", () => {
   const coordinates = { x: 4, y: 0 };
-  expect(gameBoard.recieveAttack(coordinates, shipList)).toBe(false);
+  expect(gameBoard.recieveAttack(coordinates)).toBe("Miss");
   expect(gameBoard.currBoardState()).toEqual([
     ["O", "", "", "", "", "", "", "", "", ""],
     ["O", "", "", "", "", "", "", "", "", ""],
@@ -166,7 +167,7 @@ test("Missed Attack", () => {
 
 test("Hit Attack", () => {
   const coordinates = { x: 0, y: 0 };
-  expect(gameBoard.recieveAttack(coordinates, shipList)).toBe(true);
+  expect(gameBoard.recieveAttack(coordinates)).toBe("Hit");
   expect(gameBoard.currBoardState()).toEqual([
     ["X", "", "", "", "", "", "", "", "", ""],
     ["O", "", "", "", "", "", "", "", "", ""],
@@ -184,7 +185,7 @@ test("Hit Attack", () => {
 
 test("Sink Ship", () => {
   const coordinates = { x: 1, y: 0 };
-  expect(gameBoard.recieveAttack(coordinates, shipList)).toBe(true);
+  expect(gameBoard.recieveAttack(coordinates)).toBe("Hit");
   expect(gameBoard.currBoardState()).toEqual([
     ["X", "", "", "", "", "", "", "", "", ""],
     ["X", "", "", "", "", "", "", "", "", ""],
@@ -199,4 +200,21 @@ test("Sink Ship", () => {
   ]);
   expect(shipObj.ship.hits()).toEqual([true, true]);
   expect(shipObj.ship.isSunk()).toBe(true);
+});
+
+test("Attacked same spot", () => {
+  const coordinates = { x: 4, y: 0 };
+  expect(gameBoard.recieveAttack(coordinates)).toBe(false);
+  expect(gameBoard.currBoardState()).toEqual([
+    ["X", "", "", "", "", "", "", "", "", ""],
+    ["X", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "O", "", "", "", ""],
+    ["*", "", "", "", "", "O", "", "", "", ""],
+    ["", "", "", "", "", "O", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+  ]);
 });

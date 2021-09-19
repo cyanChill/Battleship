@@ -1,41 +1,9 @@
 import Ship from "./ship";
-import { copyArray } from "../helpers/helper";
+import { copyArray, isValidCoord } from "../helpers/helper";
 
 const Gameboard = () => {
-  const defaultShips = () => {
-    return [
-      {
-        ship: Ship(5, "Carrier"),
-        vertical: false,
-        location: null,
-      },
-      {
-        ship: Ship(4, "BattleShip"),
-        vertical: false,
-        location: null,
-      },
-      {
-        ship: Ship(3, "Destroyer"),
-        vertical: false,
-        location: null,
-      },
-      {
-        ship: Ship(3, "Submarine"),
-        vertical: false,
-        location: null,
-      },
-      {
-        ship: Ship(2, "Patrol Boat"),
-        vertical: false,
-        location: null,
-      },
-    ];
-  };
-
   let board = copyArray(new Array(10).fill(new Array(10).fill("")));
-  const ships = defaultShips();
-
-  /* Traverse through "ships" array to place the ships down */
+  const ships = [];
 
   const currBoardState = () => {
     return copyArray(board);
@@ -116,19 +84,22 @@ const Gameboard = () => {
     return true;
   };
 
-  const recieveAttack = (coordinates, shipList = ships) => {
+  const recieveAttack = (coordinates) => {
     const { x, y } = coordinates;
+
+    // Spot already hit
+    if (board[x][y] === "*" || board[x][y] === "X") return false;
 
     // No part of ship located at the coordinate
     if (board[x][y] === "") {
       board[x][y] = "*";
-      return false;
+      return "Miss";
     }
 
     board[x][y] = "X";
 
     // Find the ship that was hit
-    const hitShip = shipList.find((shipInfo) => {
+    const hitShip = ships.find((shipInfo) => {
       const {
         ship: { length },
         vertical,
@@ -142,14 +113,31 @@ const Gameboard = () => {
     if (hitShip.vertical) hitShip.ship.hit(x - hitShip.location.x);
     else hitShip.ship.hit(y - hitShip.location.y);
 
+    return "Hit";
+  };
+
+  const isReady = () => {
+    return ships.every((shipInfo) => shipInfo.location) && ships.length !== 0;
+  };
+
+  const addShipInfo = (shipInfo) => {
+    if (
+      !shipInfo.ship instanceof Ship ||
+      (shipInfo.vertical !== true && shipInfo.vertical !== false)
+    ) {
+      return false;
+    }
+
+    ships.push(shipInfo);
+
     return true;
   };
 
-  /* 
-    placeShipAt can be an internal function
-  */
+  const viewShipsInfo = () => {
+    return copyArray(ships);
+  };
 
-  return { currBoardState, placeShipAt, recieveAttack };
+  return { currBoardState, placeShipAt, recieveAttack, isReady, addShipInfo, viewShipsInfo };
 };
 
 export default Gameboard;
