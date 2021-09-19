@@ -1,5 +1,5 @@
 import Ship from "./ship";
-import { copyArray, isValidCoord } from "../helpers/helper";
+import { copyArray, isValidState } from "../helpers/helper";
 
 const Gameboard = () => {
   let board = copyArray(new Array(10).fill(new Array(10).fill("")));
@@ -10,7 +10,9 @@ const Gameboard = () => {
   };
 
   const placeShipAt = (shipInfo, newState) => {
-    if (isValidPosition(board, shipInfo, newState)) {
+    if (!isValidState(newState)) return false;
+
+    if (isValidPosition(shipInfo, newState)) {
       const length = shipInfo.ship.length;
       const {
         vertical,
@@ -18,7 +20,7 @@ const Gameboard = () => {
       } = newState;
 
       // Remove Prev Ship Location & update the current board
-      let { newBoardState } = removeShipOnBoard(board, shipInfo);
+      let { newBoardState } = removeShipOnBoard(shipInfo);
       board = newBoardState;
 
       for (let i = 0; i < length; i++) {
@@ -35,18 +37,18 @@ const Gameboard = () => {
     return false;
   };
 
-  const removeShipOnBoard = (currBoard, shipInfo) => {
+  const removeShipOnBoard = (shipInfo) => {
     const {
       vertical,
       ship: { length },
       location,
     } = shipInfo;
+    const boardCopy = currBoardState();
 
     // If the ship isn't on the board
-    if (!location) return { newBoardState: currBoard, newShipObjState: shipInfo };
+    if (!location) return { newBoardState: boardCopy, newShipObjState: shipInfo };
 
     const { x, y } = location;
-    const boardCopy = copyArray(currBoard);
 
     for (let i = 0; i < length; i++) {
       if (vertical) boardCopy[x + i][y] = "";
@@ -62,7 +64,9 @@ const Gameboard = () => {
     };
   };
 
-  const isValidPosition = (currBoard, shipInfo, state) => {
+  const isValidPosition = (shipInfo, state) => {
+    if (!isValidState(state)) return false;
+
     const length = shipInfo.ship.length;
     const {
       vertical,
@@ -73,7 +77,7 @@ const Gameboard = () => {
     if ((vertical && x + length > 9) || (!vertical && y + length > 9)) return false;
 
     // Simulate removing the ship on the board if it was previous on the board
-    let { newBoardState } = removeShipOnBoard(currBoard, shipInfo);
+    let { newBoardState } = removeShipOnBoard(shipInfo);
 
     for (let i = 0; i < length; i++) {
       // If there exists an part of the ship in the path
@@ -120,6 +124,10 @@ const Gameboard = () => {
     return ships.every((shipInfo) => shipInfo.location) && ships.length !== 0;
   };
 
+  const gameOver = () => {
+    return ships.every((shipInfo) => shipInfo.ship.isSunk());
+  };
+
   const addShipInfo = (shipInfo) => {
     if (
       !shipInfo.ship instanceof Ship ||
@@ -133,11 +141,14 @@ const Gameboard = () => {
     return true;
   };
 
-  const viewShipsInfo = () => {
-    return copyArray(ships);
+  return {
+    currBoardState,
+    placeShipAt,
+    recieveAttack,
+    isReady,
+    gameOver,
+    addShipInfo,
   };
-
-  return { currBoardState, placeShipAt, recieveAttack, isReady, addShipInfo, viewShipsInfo };
 };
 
 export default Gameboard;

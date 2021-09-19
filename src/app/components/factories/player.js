@@ -1,20 +1,25 @@
+import { getRandomCoords } from "../helpers/helper";
+
 const Player = (name) => {
   const attackBoard = (coords, enemyBoard) => {
-    return enemyBoard.recieveAttack(coords);
+    return {
+      location: coords,
+      result: enemyBoard.recieveAttack(coords),
+    };
   };
 
   const autoAttackBoard = (enemyBoard) => {
-    let coords;
     let result = false;
+    let coords;
     do {
-      coords = {
-        x: Math.floor(Math.random() * 10),
-        y: Math.floor(Math.random() * 10),
-      };
+      coords = getRandomCoords();
       result = enemyBoard.recieveAttack(coords);
     } while (!result);
 
-    return result;
+    return {
+      location: coords,
+      result,
+    };
   };
 
   return { name, attackBoard, autoAttackBoard };

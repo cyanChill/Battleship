@@ -4,22 +4,22 @@ import Ship from "../factories/ship";
 const gameBoard = Gameboard();
 
 const PatrolBoat = Ship(2, "Patrol Boat");
-const shipObj = {
+const patrolShipInfo = {
   ship: PatrolBoat,
   vertical: false,
   location: null,
 };
 
 const Submarine = Ship(3, "Submarine");
-const subShipObj = {
+const submarineShipInfo = {
   ship: Submarine,
   vertical: false,
   location: null,
 };
-gameBoard.placeShipAt(subShipObj, { vertical: true, location: { x: 3, y: 5 } });
+gameBoard.placeShipAt(submarineShipInfo, { vertical: true, location: { x: 3, y: 5 } });
 
-gameBoard.addShipInfo(shipObj);
-gameBoard.addShipInfo(subShipObj);
+gameBoard.addShipInfo(patrolShipInfo);
+gameBoard.addShipInfo(submarineShipInfo);
 
 /* Start of tests */
 test("Place a ship onto the board", () => {
@@ -28,7 +28,7 @@ test("Place a ship onto the board", () => {
     location: { x: 0, y: 0 },
   };
 
-  expect(gameBoard.placeShipAt(shipObj, newState)).toBe(true);
+  expect(gameBoard.placeShipAt(patrolShipInfo, newState)).toBe(true);
   expect(gameBoard.currBoardState()).toEqual([
     ["O", "O", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
@@ -49,7 +49,7 @@ test("Place a vertical ship onto the board", () => {
     location: { x: 0, y: 0 },
   };
 
-  expect(gameBoard.placeShipAt(shipObj, newState)).toBe(true);
+  expect(gameBoard.placeShipAt(patrolShipInfo, newState)).toBe(true);
   expect(gameBoard.currBoardState()).toEqual([
     ["O", "", "", "", "", "", "", "", "", ""],
     ["O", "", "", "", "", "", "", "", "", ""],
@@ -70,7 +70,7 @@ test("Invalid Horizontal Placement", () => {
     location: { x: 9, y: 9 },
   };
 
-  expect(gameBoard.placeShipAt(shipObj, newState)).toBe(false);
+  expect(gameBoard.placeShipAt(patrolShipInfo, newState)).toBe(false);
   expect(gameBoard.currBoardState()).toEqual([
     ["O", "", "", "", "", "", "", "", "", ""],
     ["O", "", "", "", "", "", "", "", "", ""],
@@ -91,7 +91,7 @@ test("Invalid Vertical Placement", () => {
     location: { x: 9, y: 9 },
   };
 
-  expect(gameBoard.placeShipAt(shipObj, newState)).toBe(false);
+  expect(gameBoard.placeShipAt(patrolShipInfo, newState)).toBe(false);
   expect(gameBoard.currBoardState()).toEqual([
     ["O", "", "", "", "", "", "", "", "", ""],
     ["O", "", "", "", "", "", "", "", "", ""],
@@ -112,7 +112,7 @@ test("Invalid Horizontal Placement: Overlap", () => {
     location: { x: 3, y: 4 },
   };
 
-  expect(gameBoard.placeShipAt(shipObj, newState)).toBe(false);
+  expect(gameBoard.placeShipAt(patrolShipInfo, newState)).toBe(false);
   expect(gameBoard.currBoardState()).toEqual([
     ["O", "", "", "", "", "", "", "", "", ""],
     ["O", "", "", "", "", "", "", "", "", ""],
@@ -133,7 +133,7 @@ test("Invalid Vertical Placement: Overlap", () => {
     location: { x: 2, y: 5 },
   };
 
-  expect(gameBoard.placeShipAt(shipObj, newState)).toBe(false);
+  expect(gameBoard.placeShipAt(patrolShipInfo, newState)).toBe(false);
   expect(gameBoard.currBoardState()).toEqual([
     ["O", "", "", "", "", "", "", "", "", ""],
     ["O", "", "", "", "", "", "", "", "", ""],
@@ -180,7 +180,7 @@ test("Hit Attack", () => {
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
   ]);
-  expect(shipObj.ship.hits()).toEqual([true, false]);
+  expect(patrolShipInfo.ship.hits()).toEqual([true, false]);
 });
 
 test("Sink Ship", () => {
@@ -198,8 +198,8 @@ test("Sink Ship", () => {
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
   ]);
-  expect(shipObj.ship.hits()).toEqual([true, true]);
-  expect(shipObj.ship.isSunk()).toBe(true);
+  expect(patrolShipInfo.ship.hits()).toEqual([true, true]);
+  expect(patrolShipInfo.ship.isSunk()).toBe(true);
 });
 
 test("Attacked same spot", () => {
@@ -217,4 +217,12 @@ test("Attacked same spot", () => {
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
   ]);
+});
+
+test("Game Over", () => {
+  gameBoard.recieveAttack({ x: 3, y: 5 });
+  gameBoard.recieveAttack({ x: 4, y: 5 });
+  gameBoard.recieveAttack({ x: 5, y: 5 });
+
+  expect(gameBoard.gameOver()).toBe(true);
 });
