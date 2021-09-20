@@ -54,6 +54,7 @@ body {
 .controls {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 1rem;
 }
 
@@ -93,7 +94,7 @@ body {
 }
 
 .ship {
-  background-color: cadetblue;
+  background-color: cadetblue !important;
 }
 
 .square.hit::before {
@@ -140,7 +141,6 @@ body {
 
 #winner {
   font-family: var(--font-family);
-  font-weight: bold;
   font-size: clamp(1.5rem, 5vw, 2.5rem);
 }
 
@@ -150,6 +150,18 @@ body {
   align-items: center;
   position: absolute;
   animation: appear ease-in-out 500ms forwards;
+}
+
+/* instructions */
+#instructions {
+  font-family: var(--font-family);
+  font-size: clamp(1.25rem, 5vw, 2rem);
+  color: rgb(160, 160, 160);
+}
+
+/* Hover over div for placement idea */
+.spot {
+  background-color: black;
 }
 
 @keyframes appear {
@@ -173,5 +185,4 @@ body {
 }
 
 @media (max-width: 300px) {
-
 }
