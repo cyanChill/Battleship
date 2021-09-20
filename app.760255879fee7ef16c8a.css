@@ -1,0 +1,190 @@
+@import url(https://fonts.googleapis.com/css2?family=Bungee&display=swap);
+:root {
+  --sqr-dimensions: clamp(1.6rem, 4.5vw, 3.125rem);
+  --font-family: "Bungee", cursive;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.btn {
+  cursor: pointer;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid black;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background-color: rgb(224, 223, 223);
+}
+
+body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin: 0;
+  padding: 0;
+}
+
+.title {
+  padding: 0;
+  margin: 0;
+  font-size: clamp(2rem, 10vw, 3rem);
+  font-family: var(--font-family);
+}
+
+.container {
+  width: min(100%, 1300px);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.lock-board {
+  cursor: default;
+  pointer-events: none;
+}
+
+.gameboard-container {
+  display: grid;
+  grid-template-columns: repeat(10, max-content);
+  padding: 1rem 0.5rem;
+}
+
+.gameboard-container.computer .square {
+  background-color: grey !important;
+}
+
+.gameboard-container.computer .square:not(.hit):hover {
+  background-color: rgb(173, 173, 173) !important;
+}
+
+.square {
+  cursor: pointer;
+  width: var(--sqr-dimensions);
+  height: var(--sqr-dimensions);
+  border: 1px solid rgb(80, 80, 80);
+  position: relative;
+}
+
+.hit {
+  cursor: default;
+}
+
+.water {
+  background-color: aliceblue;
+}
+
+.ship {
+  background-color: cadetblue !important;
+}
+
+.square.hit::before {
+  content: "";
+  width: calc(var(--sqr-dimensions) / 2);
+  height: calc(var(--sqr-dimensions) / 2);
+  border-radius: 50%;
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  transform: translate(50%, 50%);
+}
+
+.square.water.hit::before {
+  background-color: lightgray;
+}
+
+.square.ship.hit::before {
+  background-color: red;
+}
+
+/* Reset Modal */
+#reset-modal {
+  height: max(100%, 30rem);
+  width: 100%;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  opacity: 0;
+}
+
+#modal-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  border: 1px solid black;
+  z-index: 51;
+}
+
+#winner {
+  font-family: var(--font-family);
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+#reset-modal.show {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  animation: appear ease-in-out 500ms forwards;
+}
+
+/* instructions */
+#instructions {
+  font-family: var(--font-family);
+  font-size: clamp(1.25rem, 5vw, 2rem);
+  color: rgb(160, 160, 160);
+}
+
+/* Hover over div for placement idea */
+.spot {
+  background-color: black;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 800px) {
+  :root {
+    --sqr-dimensions: clamp(1.6rem, 8vw, 2.5rem);
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 300px) {
+}
+
+
+/*# sourceMappingURL=app.760255879fee7ef16c8a.css.map*/
