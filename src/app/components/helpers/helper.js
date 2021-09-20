@@ -1,6 +1,8 @@
+import Ship from "../factories/ship";
+
 const copyArray = (arr) => JSON.parse(JSON.stringify(arr));
 
-const defaultShips = () => {
+const getDefaultShips = () => {
   return [
     {
       ship: Ship(5, "Carrier"),
@@ -30,16 +32,29 @@ const defaultShips = () => {
   ];
 };
 
-const isValidCoord = (coords) => {
+const isValidState = (state) => {
   const has = Object.prototype.hasOwnProperty;
-  if (!has.call(coords, "x") || !has.call(coords, "y")) return false;
-
-  const { x, y } = coords;
-  if (typeof x !== "number" || typeof y !== "number") return false;
-
-  if (x < 0 || x > 9 || y < 0 || y > 9) return false;
+  if (!has.call(state, "vertical") || !has.call(state, "location")) return false;
+  if (state.vertical !== true && state.vertical !== false) return false;
+  if (!isValidCoord(state.location)) return false;
 
   return true;
 };
 
-export { copyArray, defaultShips, isValidCoord };
+const getRandomCoords = () => {
+  return {
+    x: Math.floor(Math.random() * 10),
+    y: Math.floor(Math.random() * 10),
+  };
+};
+
+const getRandomNewState = () => {
+  const vertical = Math.floor(Math.random() * 100) < 50 ? true : false;
+
+  return {
+    vertical,
+    location: getRandomCoords(),
+  };
+};
+
+export { copyArray, getDefaultShips, isValidState, getRandomCoords, getRandomNewState };
