@@ -32,6 +32,18 @@ const getDefaultShips = () => {
   ];
 };
 
+const isValidCoord = (coords) => {
+  const has = Object.prototype.hasOwnProperty;
+  if (!has.call(coords, "x") || !has.call(coords, "y")) return false;
+
+  const { x, y } = coords;
+  if (typeof x !== "number" || typeof y !== "number") return false;
+
+  if (x < 0 || x > 9 || y < 0 || y > 9) return false;
+
+  return true;
+};
+
 const isValidState = (state) => {
   const has = Object.prototype.hasOwnProperty;
   if (!has.call(state, "vertical") || !has.call(state, "location")) return false;
@@ -57,4 +69,11 @@ const getRandomNewState = () => {
   };
 };
 
-export { copyArray, getDefaultShips, isValidState, getRandomCoords, getRandomNewState };
+export {
+  copyArray,
+  getDefaultShips,
+  isValidCoord,
+  isValidState,
+  getRandomCoords,
+  getRandomNewState,
+};
