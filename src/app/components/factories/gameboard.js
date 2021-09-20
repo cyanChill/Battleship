@@ -74,7 +74,7 @@ const Gameboard = () => {
     } = state;
 
     // If the ship would go off the board in this new state
-    if ((vertical && x + length > 9) || (!vertical && y + length > 9)) return false;
+    if ((vertical && x + length > 10) || (!vertical && y + length > 10)) return false;
 
     // Simulate removing the ship on the board if it was previous on the board
     let { newBoardState } = removeShipOnBoard(shipInfo);
@@ -110,18 +110,14 @@ const Gameboard = () => {
         location: { x: startX, y: startY },
       } = shipInfo;
 
-      if (vertical) return startX <= x && x <= startX + length && startY === y;
-      else return startX === x && startY <= y && y <= startY + length;
+      if (vertical) return startX <= x && x < startX + length && startY === y;
+      else return startX === x && startY <= y && y < startY + length;
     });
 
     if (hitShip.vertical) hitShip.ship.hit(x - hitShip.location.x);
     else hitShip.ship.hit(y - hitShip.location.y);
 
     return "Hit";
-  };
-
-  const isReady = () => {
-    return ships.every((shipInfo) => shipInfo.location) && ships.length !== 0;
   };
 
   const gameOver = () => {
@@ -135,7 +131,7 @@ const Gameboard = () => {
     ) {
       return false;
     }
-
+    shipInfo.location = null;
     ships.push(shipInfo);
 
     return true;
@@ -145,7 +141,6 @@ const Gameboard = () => {
     currBoardState,
     placeShipAt,
     recieveAttack,
-    isReady,
     gameOver,
     addShipInfo,
   };
