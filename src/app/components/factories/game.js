@@ -39,7 +39,8 @@ const initializeGame = () => {
 };
 
 const createPlayerBoard = (game) => {
-  const { playerBoard, ComputerDOMBoard } = game;
+  const { playerBoard, playerDOMBoard, ComputerDOMBoard } = game;
+  const playerBoardSquares = playerDOMBoard.querySelectorAll(".square");
 
   const ships = getDefaultShips();
   let isVertical = false;
@@ -97,11 +98,27 @@ const createPlayerBoard = (game) => {
             ships.shift();
           }
         }
+        playerBoardDiv.removeEventListener("mouseover", layoutHover);
         playerBoardDiv.removeEventListener("click", addShip);
         playerAddShips();
       };
 
+      const layoutHover = (e) => {
+        const x = parseInt(e.target.dataset.x);
+        const y = parseInt(e.target.dataset.y);
+        playerBoardSquares.forEach((square) => square.classList.remove("spot"));
+
+        for (let i = 0; i < shipLength; i++) {
+          if ((!x && x !== 0) || (x + i > 9 && isVertical) || (y + i > 9 && !isVertical)) continue;
+          const square = playerBoardDiv.querySelector(
+            `.square[data-x="${isVertical ? x + i : x}"][data-y="${isVertical ? y : y + i}"]`
+          );
+          square.classList.add("spot");
+        }
+      };
+
       playerBoardDiv.addEventListener("click", addShip);
+      playerBoardDiv.addEventListener("mouseover", layoutHover);
     }
   };
 
